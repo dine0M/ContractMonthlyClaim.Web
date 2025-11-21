@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ContractMonthlyClaim.Web.Models.Claim>
+@{
+    ViewData["Title"] = "Approved Claims Invoice Report";
+}
+
+<h2>Approved Claims – Invoice Report</h2>
+
+@if (!Model.Any())
+{
+    <p>No approved claims available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Claim ID</th>
+                <th>Lecturer ID</th>
+                <th>Total Amount</th>
+                <th>Date Submitted</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Id</td>
+                    <td>@c.LecturerId</td>
+                    <td>@c.TotalAmount</td>
+                    <td>@c.DateSubmitted.ToString("yyyy/MM/dd")</td>
+                    <td>@c.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p><strong>Total to be paid:</strong> @Model.Sum(c => c.TotalAmount)</p>
+}

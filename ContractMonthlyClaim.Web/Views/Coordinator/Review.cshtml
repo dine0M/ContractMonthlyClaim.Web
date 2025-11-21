@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ContractMonthlyClaim.Web.Models.Claim>
+@{
+    ViewData["Title"] = "Coordinator Review";
+}
+
+<h2>Coordinator Review</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Claim Id</th>
+            <th>Lecturer Id</th>
+            <th>Hours</th>
+            <th>Rate</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>File</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.LecturerId</td>
+                <td>@c.HoursWorked</td>
+                <td>@c.HourlyRate</td>
+                <td>@c.TotalAmount</td>
+                <td>@c.Status</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(c.UploadPath))
+                    {
+                        <a href="@c.UploadPath" target="_blank">View</a>
+                    }
+                </td>
+                <td>
+                    @if (c.Status == ContractMonthlyClaim.Web.Models.ClaimStatus.Pending)
+                    {
+                        <form asp-action="Review" asp-controller="Coordinator" method="post">
+                            <input type="hidden" name="claimId" value="@c.Id" />
+                            <button type="submit">Mark Under Review</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>Already @c.Status</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ContractMonthlyClaim.Web.Models.Claim>
+@{
+    ViewData["Title"] = "Manager Review";
+}
+
+<h2>Manager Review</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Claim Id</th>
+            <th>Lecturer Id</th>
+            <th>Hours</th>
+            <th>Rate</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>File</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@c.Id</td>
+                <td>@c.LecturerId</td>
+                <td>@c.HoursWorked</td>
+                <td>@c.HourlyRate</td>
+                <td>@c.TotalAmount</td>
+                <td>@c.Status</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(c.UploadPath))
+                    {
+                        <a href="@c.UploadPath" target="_blank">View</a>
+                    }
+                </td>
+                <td>
+                    @if (c.Status == ContractMonthlyClaim.Web.Models.ClaimStatus.UnderReview)
+                    {
+                        <form asp-action="Review" asp-controller="Manager" method="post" style="display:inline;">
+                            <input type="hidden" name="claimId" value="@c.Id" />
+                            <button type="submit" name="status" value="Approved">Approve</button>
+                            <button type="submit" name="status" value="Rejected">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>Final: @c.Status</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+    string path = Context.Request.Path.Value ?? "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Contract Monthly Claim</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            background: #f0f0f0;
+        }
+
+        .tab {
+            padding: 8px 14px;
+            border-radius: 6px 6px 0 0;
+            text-decoration: none;
+            color: #333;
+            background: #e0e0e0;
+        }
+
+            .tab.active {
+                background: #ffffff;
+                border: 1px solid #ccc;
+                border-bottom: 0;
+                font-weight: bold;
+            }
+
+        .container {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <a href="@Url.Action("Index", "Home")" class="tab @(Context.Request.Path.Value.Contains("/Home") ? "active" : "")">Home</a>
+        <a href="@Url.Action("SubmitClaim", "Lecturer")" class="tab @(Context.Request.Path.Value.Contains("/Lecturer") ? "active" : "")">Lecturer</a>
+        <a href="@Url.Action("Review", "Coordinator")" class="tab @(Context.Request.Path.Value.Contains("/Coordinator") ? "active" : "")">Coordinator</a>
+        <a href="@Url.Action("Review", "Manager")" class="tab @(Context.Request.Path.Value.Contains("/Manager") ? "active" : "")">Manager</a>
+        <a href="@Url.Action("ManageLecturers", "HR")" class="tab @(Context.Request.Path.Value.Contains("/HR") ? "active" : "")">HR</a>
+    </div>
+
+    <div class="main-shell">
+        <div class="page-section">
+            @RenderBody()
+        </div>
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

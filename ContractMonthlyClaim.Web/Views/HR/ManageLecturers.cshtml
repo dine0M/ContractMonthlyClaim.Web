@@ -1,0 +1,75 @@
+﻿@model ContractMonthlyClaim.Web.Models.HrDashboardViewModel
+@{
+    ViewData["Title"] = "HR – Manage Lecturers & Overview";
+}
+
+<h2>HR – Manage Lecturers & Overview</h2>
+
+<h3>Overall Claim Activity</h3>
+<ul>
+    <li>Total Claims: @Model.TotalClaims</li>
+    <li>Pending: @Model.PendingCount</li>
+    <li>Under Review: @Model.UnderReviewCount</li>
+    <li>Approved: @Model.ApprovedCount</li>
+    <li>Rejected: @Model.RejectedCount</li>
+</ul>
+
+<p>
+    <a asp-action="InvoiceReport" class="btn btn-secondary">
+        View Approved Claims Report (Invoice Summary)
+    </a>
+</p>
+
+<hr />
+
+<h3>Add Lecturer</h3>
+<form asp-action="AddLecturer" method="post">
+    <div>
+        <label asp-for="NewLecturer.Name"></label><br />
+        <input asp-for="NewLecturer.Name" />
+        <span asp-validation-for="NewLecturer.Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="NewLecturer.Email"></label><br />
+        <input asp-for="NewLecturer.Email" />
+    </div>
+    <div>
+        <label asp-for="NewLecturer.Department"></label><br />
+        <input asp-for="NewLecturer.Department" />
+    </div>
+    <div>
+        <label asp-for="NewLecturer.PhoneNumber"></label><br />
+        <input asp-for="NewLecturer.PhoneNumber" />
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top:8px;">Add Lecturer</button>
+</form>
+
+<hr />
+
+<h3>Current Lecturers</h3>
+
+@if (Model.Lecturers != null && Model.Lecturers.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lecturer ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+        
+    </table>
+}
+else
+{
+    <p>No lecturers added yet.</p>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

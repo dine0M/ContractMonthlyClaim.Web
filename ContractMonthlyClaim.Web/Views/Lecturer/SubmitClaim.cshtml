@@ -1,0 +1,103 @@
+﻿@model ContractMonthlyClaim.Web.Models.LecturerClaimViewModel
+@{
+    ViewData["Title"] = "Submit Monthly Claim";
+}
+
+<h2>Submit Monthly Claim</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<form asp-action="SubmitClaim" asp-controller="Lecturer" method="post" enctype="multipart/form-data">
+    <div style="display:flex; gap:20px; margin-bottom:10px;">
+        <div>
+            <label asp-for="LecturerId"></label><br />
+            <input asp-for="LecturerId" />
+            <span asp-validation-for="LecturerId" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="HoursWorked"></label><br />
+            <input asp-for="HoursWorked" type="number" step="0.1" id="hoursInput" />
+            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="HourlyRate"></label><br />
+            <input asp-for="HourlyRate" type="number" step="0.01" id="rateInput" />
+            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+        </div>
+        <div>
+            <label>Total Amount</label><br />
+            <input id="totalAmountDisplay" readonly="readonly" value="0" />
+        </div>
+    </div>
+
+    <div style="margin-bottom:10px;">
+        <label asp-for="Notes"></label><br />
+        <textarea asp-for="Notes" style="width:60%; height:80px;"></textarea>
+    </div>
+
+    <div style="margin-bottom:10px;">
+        <label asp-for="UploadFile"></label><br />
+        <input asp-for="UploadFile" type="file" />
+        <span class="text-muted">(.pdf, .docx, .xlsx | max 5 MB)</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Claim</button>
+</form>
+
+<hr />
+
+<h3>Your Claims</h3>
+
+@if (Model.PreviousClaims != null && Model.PreviousClaims.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Lecturer ID</th>
+                <th>Total Amount</th>
+                <th>Date Submitted</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = 1;
+                foreach (var c in Model.PreviousClaims.OrderByDescending(c => c.DateSubmitted))
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@c.LecturerId</td>
+                        <td>@c.TotalAmount</td>
+                        <td>@c.DateSubmitted.ToString("yyyy/MM/dd")</td>
+                        <td>@c.Status</td>
+                    </tr>
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No claims submitted yet.</p>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function updateTotal() {
+            var hours = parseFloat(document.getElementById('hoursInput').value || 0);
+            var rate = parseFloat(document.getElementById('rateInput').value || 0);
+            var total = hours * rate;
+            document.getElementById('totalAmountDisplay').value = total.toFixed(2);
+        }
+
+        document.getElementById('hoursInput').addEventListener('input', updateTotal);
+        document.getElementById('rateInput').addEventListener('input', updateTotal);
+        updateTotal();
+    </script>
+}
